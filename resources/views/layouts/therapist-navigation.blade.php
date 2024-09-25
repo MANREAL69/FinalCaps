@@ -16,8 +16,8 @@
                     </x-nav-link>
 
                     <!-- Add more therapist-specific links here -->
-                    <x-nav-link>
-                        {{ __('Schedule') }}
+                    <x-nav-link :href="route('therapist.appointment')" :active="request()->routeIs('therapist.appointment')">
+                        {{ __('Appointment') }}
                     </x-nav-link>
 
                     <x-nav-link>

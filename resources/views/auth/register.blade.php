@@ -16,7 +16,6 @@
                 <option value="" disabled selected>{{ __('Select Role') }}</option>
                 <option value="patient">{{ __('Patient') }}</option>
                 <option value="therapist">{{ __('Therapist') }}</option>
-                <option value="admin">{{ __('Admin') }}</option>
             </select>
             <x-input-error :messages="$errors->get('role')" class="mt-2" />
         </div>

@@ -16,7 +16,7 @@
                     </x-nav-link>
 
                     <!-- Add more patient-specific links here -->
-                    <x-nav-link>
+                    <x-nav-link :href="route('patients.appointment')" :active="request()->routeIs('patients.appointment')"> 
                         {{ __('Appointments') }}
                     </x-nav-link>
 

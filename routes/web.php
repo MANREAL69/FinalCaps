@@ -5,6 +5,7 @@ use App\Http\Livewire\Chat\Chat;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\TherapistController;
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -36,10 +37,24 @@ Route::middleware(['auth', 'role:therapist'])->get('/therapist/dashboard', [Ther
 
 // Patient dashboard route
 Route::middleware(['auth', 'role:patient'])->get('/patient/dashboard', [PatientController::class, 'index'])->name('patients.dashboard');
+// Patient view appointment
+Route::middleware(['auth', 'role:patient'])->get('/patient/appointment', [PatientController::class, 'viewApp'])->name('patients.appointment');
+// Patient cancel appointment
+Route::middleware(['auth', 'role:patient'])->post('/patient/appointment{appointmentID}', [AppointmentController::class, 'cancelApp'])->name('patients.cancelApp');
+// Patient bookappointment route
+Route::middleware(['auth', 'role:patient'])->get('/patient/bookappointment', [PatientController::class, 'appIndex'])->name('patients.bookappointments');
+// Patient appointment details
+Route::middleware(['auth', 'role:patient'])->get('/patient/bookappointment/{id}', [PatientController::class, 'appDetails'])->name('patients.therapist-details');
+// Patient store appointment
+Route::post('patients/bookappointment/store', [AppointmentController::class, 'store'])->name('appointments.store');
 
-    Route::post('/login', [LoginController::class, 'login'])->name('login');
+// Therapist appointment
+Route::middleware(['auth', 'role:therapist'])->get('/therapist/appointment', [TherapistController::class, 'appIndex'])->name('therapist.appointment');
+
+
+Route::post('/login', [LoginController::class, 'login'])->name('login');
     
-    Route::middleware('auth')->group(function (){
+Route::middleware('auth')->group(function (){
         Route::get('/chat',Index::class)->name('chat.index');
         Route::get('/chat/{query}',Chat::class)->name('chat');
         Route::get('/users',Users::class)->name('users');
