@@ -17,7 +17,13 @@
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+        @if (Auth::user()->role === 'admin')
+            @include('layouts.admin-navigation')
+        @elseif (Auth::user()->role === 'therapist')
+            @include('layouts.therapist-navigation')
+        @elseif (Auth::user()->role === 'patient')
+            @include('layouts.patients-navigation')
+        @endif
 
             <!-- Page Content -->
             <main>

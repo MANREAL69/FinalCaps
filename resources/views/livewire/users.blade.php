@@ -2,8 +2,6 @@
 
     <h5 class="text-center text-5xl font-bold py-3">Users</h5>
 
-
-
     <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 p-2 ">
 
         @foreach ($users as $key=> $user)
