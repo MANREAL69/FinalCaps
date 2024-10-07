@@ -24,4 +24,8 @@ class TherapistController extends Controller
         return view('therapist.appointments', compact('appointments'));
     }
 
+    public function showRegistrationForm() {
+        return view('therapist.register');
+    }
+
 }
