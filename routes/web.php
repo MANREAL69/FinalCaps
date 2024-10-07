@@ -9,11 +9,20 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\RegisteredUserController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::get('/select-register', [AdminController::class, 'selectRegister'])->name('view.select-register');
+
+Route::get('/register/patient', [PatientController::class, 'showRegistrationForm'])->name('patient.register');
+Route::get('/register/therapist', [TherapistController::class, 'showRegistrationForm'])->name('therapist.register');
+
+Route::post('/register/patient', [RegisteredUserController::class, 'storePatient'])->name('patient.store');
+Route::post('/register/therapist', [RegisteredUserController::class, 'storeTherapist'])->name('therapist.store');
 
 Route::get('/dashboard', function () {
     $user = auth()->user();

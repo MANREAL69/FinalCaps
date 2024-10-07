@@ -42,4 +42,8 @@ class PatientController extends Controller
         // Pass the therapist to the view
         return view('patients.therapist-details', compact('therapist'));
     }
+
+    public function showRegistrationForm () {
+        return view('patients.register');
+    }
 }

@@ -63,4 +63,63 @@ class RegisteredUserController extends Controller
     return redirect(RouteServiceProvider::HOME);
     }
 
+    /**
+     * Handle an incoming registration request for patients.
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function storePatient(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        // Create the user with the requested role
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'patient', 
+        ]);
+
+        event(new Registered($user));
+
+        // Log the user in after registration
+        Auth::login($user);
+
+        // Redirect based on the role
+        return redirect()->route('patients.dashboard');
+    }
+    /**
+     * Handle an incoming registration request for therapists.
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function storeTherapist(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+
+        // Create the user with the requested role
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => 'therapist', 
+        ]);
+
+        event(new Registered($user));
+
+        // Log the user in after registration
+        Auth::login($user);
+
+        // Redirect based on the role
+        return redirect()->route('therapist.dashboard');
+    }
+
 }
