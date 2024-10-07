@@ -26,6 +26,10 @@
                     <x-nav-link>
                         {{ __('Progress') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('subscriptions.index')" :active="request()->routeIs('subscriptions.*')">
+                        {{ __('Subscriptions') }}
+                    </x-nav-link>
+                    
 
                 </div>
             </div>

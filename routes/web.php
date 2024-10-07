@@ -11,6 +11,9 @@ use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\SubscriptionController;
+use App\Http\Controllers\PaymentController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -42,6 +45,17 @@ Route::middleware(['auth', 'role:admin'])->get('/admin/dashboard', [AdminControl
 
 // Therapist dashboard route
 Route::middleware(['auth', 'role:therapist'])->get('/therapist/dashboard', [TherapistController::class, 'index'])->name('therapist.dashboard');
+
+Route::get('/patient/subscriptions', [SubscriptionController::class, 'subPlan'])->name('subscriptions.plan'); // View subscriptions
+Route::get('/patient/my-subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index'); // View subscriptions
+Route::get('/patient/subscriptions/create', [SubscriptionController::class, 'create'])->name('subscriptions.create');  // Form to subscribe
+Route::post('/patient/subscriptions', [SubscriptionController::class, 'store'])->name('subscriptions.store');     // Store subscription
+Route::get('/patient/subscriptions/{id}/edit', [SubscriptionController::class, 'edit']);  // Edit subscription
+Route::put('/patient/subscriptions/{id}', [SubscriptionController::class, 'update']);    // Update subscription
+Route::delete('/patient/subscriptions/{id}', [SubscriptionController::class, 'destroy']); // Cancel subscription
+Route::get('/patient/subscriptions/payment', [SubscriptionController::class, 'payment'])->name('subscriptions.payment');
+Route::post('/patient/subscriptions/payments/store', [PaymentController::class, 'store'])->name('payments.store');
+
 
 // Patient dashboard route
 Route::middleware(['auth', 'role:patient'])->get('/patient/dashboard', [PatientController::class, 'index'])->name('patients.dashboard');
