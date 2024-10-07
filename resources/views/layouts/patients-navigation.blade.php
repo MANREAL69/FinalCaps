@@ -19,6 +19,9 @@
                     <x-nav-link :href="route('patients.appointment')" :active="request()->routeIs('patients.appointment')"> 
                         {{ __('Appointments') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('chat.index')" :active="request()->routeIs('chat.index')">
+                        {{ __('Chats') }}
+                    </x-nav-link>
 
                     <x-nav-link>
                         {{ __('Progress') }}
