@@ -19,7 +19,8 @@ class Appointment extends Model
         'therapistID',
         'patientID',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'status',
     ];
     
     public function patient()

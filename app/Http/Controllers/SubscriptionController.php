@@ -85,14 +85,12 @@ class SubscriptionController extends Controller
             'service_name' => 'required|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
-            'status' => 'required|string|in:pending,active,expired,canceled',
-            'payment_method' => 'required|string|in:gcash,maya,credit_card,paypal', 
         ]);
 
         $subscription = Subscription::findOrFail($id);
         $subscription->update($validated);
 
-        return redirect('/patient/subscriptions')->with('success', 'Subscription updated successfully.');
+        return redirect()->route('subscriptions.index')->with('success', 'Subscription updated successfully.');
     }
     
     
@@ -103,6 +101,6 @@ class SubscriptionController extends Controller
         $subscription = Subscription::findOrFail($id);
         $subscription->delete();
 
-        return redirect('/subscriptions')->with('success', 'Subscription canceled successfully.');
+        return redirect('/patient/my-subscriptions')->with('success', 'Subscription canceled successfully.');
     }
 }

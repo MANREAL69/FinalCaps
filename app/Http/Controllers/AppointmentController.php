@@ -26,6 +26,7 @@ class AppointmentController extends Controller
             'patientID' => Auth::id(), // therapist's ID
             'created_at' => now(),
             'updated_at' => now(),
+            'status' => 'pending',
         ]);
 
         // Redirect with success message

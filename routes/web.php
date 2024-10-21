@@ -42,6 +42,10 @@ Route::get('/dashboard', function () {
 
 // Admin dashboard route
 Route::middleware(['auth', 'role:admin'])->get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+Route::middleware(['auth', 'role:admin'])->get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+Route::middleware(['auth', 'role:admin'])->get('/admin/reports', [AdminController::class, 'reports'])->name('admin.reports');
+Route::middleware(['auth', 'role:admin'])->get('/admin/therapists', [AdminController::class, 'therapists'])->name('admin.therapists');
+Route::middleware(['auth', 'role:admin'])->get('/admin/patients', [AdminController::class, 'patients'])->name('admin.patients');
 
 // Therapist dashboard route
 Route::middleware(['auth', 'role:therapist'])->get('/therapist/dashboard', [TherapistController::class, 'index'])->name('therapist.dashboard');
@@ -50,8 +54,8 @@ Route::get('/patient/subscriptions', [SubscriptionController::class, 'subPlan'])
 Route::get('/patient/my-subscriptions', [SubscriptionController::class, 'index'])->name('subscriptions.index'); // View subscriptions
 Route::get('/patient/subscriptions/create', [SubscriptionController::class, 'create'])->name('subscriptions.create');  // Form to subscribe
 Route::post('/patient/subscriptions', [SubscriptionController::class, 'store'])->name('subscriptions.store');     // Store subscription
-Route::get('/patient/subscriptions/{id}/edit', [SubscriptionController::class, 'edit']);  // Edit subscription
-Route::put('/patient/subscriptions/{id}', [SubscriptionController::class, 'update']);    // Update subscription
+Route::get('/patient/subscriptions/{id}/edit', [SubscriptionController::class, 'edit'])->name('subscriptions.edit');  // Edit subscription
+Route::post('/patient/subscriptions/{id}/update', [SubscriptionController::class, 'update'])->name('subscriptions.update');    // Update subscription
 Route::delete('/patient/subscriptions/{id}', [SubscriptionController::class, 'destroy']); // Cancel subscription
 Route::get('/patient/subscriptions/payment', [SubscriptionController::class, 'payment'])->name('subscriptions.payment');
 Route::post('/patient/subscriptions/payments/store', [PaymentController::class, 'store'])->name('payments.store');
@@ -62,12 +66,15 @@ Route::middleware(['auth', 'role:patient'])->get('/patient/dashboard', [PatientC
 
 // Patient view appointment
 Route::middleware(['auth', 'role:patient'])->get('/patient/appointment', [PatientController::class, 'viewApp'])->name('patients.appointment');
+Route::middleware(['auth', 'role:admin'])->post('/admin/patients/{id}/deactivate', [PatientController::class, 'deactivate'])->name('patients.deactivate');
+Route::middleware(['auth', 'role:admin'])->post('/admin/therapist/{id}/deactivate', [TherapistController::class, 'deactivate'])->name('therapist.deactivate');
+
+Route::middleware(['auth', 'role:admin'])->post('/admin/patients/{id}/activate', [PatientController::class, 'activate'])->name('patients.activate');
+Route::middleware(['auth', 'role:admin'])->post('/admin/therapist/{id}/activate', [TherapistController::class, 'activate'])->name('therapist.activate');
 
 // Patient view chats
 Route::middleware(['auth', 'role:patient'])->get('/patient/chat', [ChatController::class, 'index'])->name('chat.index');
 Route::middleware(['auth', 'role:patient'])->get('/patient/chat/create', [ChatController::class, 'create'])->name('chat.create');
-
-Route::middleware(['auth', 'role:patient'])->get('/patient/chat/{id}', [ChatController::class, 'show'])->name('chat.show');
 
 // Patient cancel appointment
 Route::middleware(['auth', 'role:patient'])->post('/patient/appointment/{appointmentID}', [AppointmentController::class, 'cancelApp'])->name('patients.cancelApp');
@@ -83,6 +90,10 @@ Route::post('patients/bookappointment/store', [AppointmentController::class, 'st
 
 // Therapist appointment
 Route::middleware(['auth', 'role:therapist'])->get('/therapist/appointment', [TherapistController::class, 'appIndex'])->name('therapist.appointment');
+Route::middleware(['auth', 'role:therapist'])->post('/therapist/appointment/{appointmentID}/approve', [TherapistController::class, 'approveApp'])->name('therapist.approve');
+Route::middleware(['auth', 'role:therapist'])->post('/therapist/appointment/{appointmentID}/disapprove', [TherapistController::class, 'disapproveApp'])->name('therapist.disapprove');
+
+
 
 // Authentication routes
 Route::post('/login', [LoginController::class, 'login'])->name('login');
@@ -91,7 +102,7 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
     // Livewire chat routes
     Route::get('/patient/chat', Index::class)->name('chat.index');
     Route::get('/patient/chat/create', [ChatController::class, 'create'])->name('chat.create');
-    Route::get('/patient/chat/{id}', [ChatController::class, 'show'])->name('chat.show'); // Renamed
+    Route::get('/patient/chat/conversation/{id}', [ChatController::class, 'show'])->name('chat.show'); // Renamed
     Route::get('/patient/chat/{query}', Chat::class)->name('chat.show.livewire'); // Renamed
     Route::get('/patient/users', Users::class)->name('chat.users');
 });

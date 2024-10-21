@@ -13,15 +13,19 @@ class ChatController extends Controller
     public function index()
     {
         // Fetch conversations for the authenticated user
-        $conversations = Conversation::where('user_id', Auth::id())->with('messages')->get();
+        $conversations = Conversation::where('sender_id', Auth::id())->with('messages')->get();
         return view('chat.index', compact('conversations'));
     }
 
     public function show($id)
     {
         // Fetch specific conversation
-        $conversation = Conversation::with('messages')->findOrFail($id);
-        return view('chat.show', compact('conversation'));
+        $conversation = Conversation::with('messages')
+        ->where('id', $id)
+        ->where('sender_id', Auth::id())
+        ->first();
+
+        return view('livewire.chat.chat-box', compact('conversation'));
     }
 
     public function create()

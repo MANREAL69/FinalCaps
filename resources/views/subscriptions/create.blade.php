@@ -20,13 +20,13 @@
             <!-- Start Date -->
             <div class="mb-4">
                 <label for="start_date" class="block text-sm font-medium">Start Date:</label>
-                <input type="datetime-local" name="start_date" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500">
+                <input type="date" name="start_date" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500">
             </div>
 
             <!-- End Date -->
             <div class="mb-4">
                 <label for="end_date" class="block text-sm font-medium">End Date (optional):</label>
-                <input type="datetime-local" name="end_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500">
+                <input type="date" name="end_date" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-500">
             </div>
 
             <!-- Payment Method -->
