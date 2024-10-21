@@ -13,7 +13,8 @@ class PatientController extends Controller
     //
     public function index()
     {
-        return view('patients.dashboard');
+        $patients = User::where('role', 'therapist')->get();
+        return view('patients.dashboard', compact('patients'));
     }
 
     public function viewApp()
@@ -45,5 +46,23 @@ class PatientController extends Controller
 
     public function showRegistrationForm () {
         return view('patients.register');
+    }
+
+    public function deactivate($id)
+    {
+        $patient = User::findOrFail($id);
+        $patient->isActive = 0; // Set status to deactivated
+        $patient->save();
+
+        return redirect()->back()->with('success', 'Patient has been deactivated successfully.');
+    }
+
+    public function activate($id)
+    {
+        $patient = User::findOrFail($id);
+        $patient->isActive = 1; // Set status to activated
+        $patient->save();
+
+        return redirect()->back()->with('success', 'Patient has been activated successfully.');
     }
 }

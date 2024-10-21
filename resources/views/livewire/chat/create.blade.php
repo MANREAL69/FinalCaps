@@ -1,6 +1,5 @@
-@extends('layouts.app')
-
-@section('content')
+<title>Select Chats</title>
+<x-app-layout>
     <div class="container mx-auto">
         <h2 class="text-xl font-bold">Start a New Conversation</h2>
 
@@ -14,8 +13,6 @@
                 </div>
             @endforeach
         </div>
-
-        <!-- Include the Livewire chat list component -->
         <livewire:chat.chat-list />
     </div>
-@endsection
+</x-app-layout>

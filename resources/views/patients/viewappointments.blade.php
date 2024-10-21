@@ -21,6 +21,7 @@
                             <th class="px-4 py-2 text-left">Appointment Date</th>
                             <th class="px-4 py-2 text-left">Description</th>
                             <th class="px-4 py-2 text-left">Therapist Name</th>
+                            <th class="px-4 py-2 text-left">Status</th>
                             <th class="px-4 py-2 text-left">Actions</th>
                         </tr>
                     </thead>
@@ -31,13 +32,20 @@
                                 <td class="px-4 py-2">{{ $appointment->datetime }}</td>
                                 <td class="px-4 py-2">{{ $appointment->description }}</td>
                                 <td class="px-4 py-2">{{ $appointment->therapist->name }}</td>
-                                <td class="px-4 py-2">
-                                    <form action="{{ route('patients.cancelApp', $appointment->appointmentID) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
-                                        @csrf
-                                        @method('POST')
-                                        <button type="submit" class="focus:outline-none text-white bg-red-500 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Cancel</button>
-                                    </form>
-                                </td>
+                                <td class="px-4 py-2">{{ ucfirst($appointment->status) }}</td>
+                                @if ($appointment->status == 'pending')
+                                    <td class="px-4 py-2">
+                                        <form action="{{ route('patients.cancelApp', $appointment->appointmentID) }}" method="POST" onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
+                                            @csrf
+                                            @method('POST')
+                                            <button type="submit" class="focus:outline-none text-white bg-red-500 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Cancel</button>
+                                        </form>
+                                    </td>
+                                @elseif ($appointment->status == 'approved')
+                                    <td class="px-4 py-2">You're all set! Appointment approved.</td>
+                                @elseif ($appointment->status == 'disapproved')
+                                    <td class="px-4 py-2">This appointment has been disapproved.</td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>

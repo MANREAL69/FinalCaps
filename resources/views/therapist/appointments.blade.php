@@ -21,6 +21,7 @@
                             <th class="px-4 py-2 text-left">Appointment Date</th>
                             <th class="px-4 py-2 text-left">Description</th>
                             <th class="px-4 py-2 text-left">Created At</th>
+                            <th class="px-4 py-2 text-left">Status</th>
                             <th class="px-4 py-2 text-left">Actions</th>
                         </tr>
                     </thead>
@@ -32,10 +33,23 @@
                                 <td class="px-4 py-2 text-left">{{ $appointment->datetime }}</td>
                                 <td class="px-4 py-2 text-left">{{ $appointment->description }}</td>
                                 <td class="px-4 py-2 text-left">{{ $appointment->created_at->format('Y-m-d H:i') }}</td>
-                                <td class="px-4 py-2 text-left">
-                                    <button class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Approve</button>
-                                    <button class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Disapprove</button>
-                                </td>
+                                <td class="px-4 py-2 text-left">{{ ucwords($appointment->status) }}</td>
+                                @if ($appointment->status == 'pending')
+                                    <td class="px-4 py-2 text-left">
+                                        <form action="{{ route('therapist.approve', $appointment->appointmentID) }}" method="POST" class="inline">
+                                            @csrf
+                                            <button type="submit" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Approve</button>
+                                        </form>
+                                        <form action="{{ route('therapist.disapprove', $appointment->appointmentID) }}" method="POST" class="inline">
+                                            @csrf
+                                            <button type="submit" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Disapprove</button>
+                                        </form>
+                                    </td>
+                                @elseif ($appointment->status == 'approved')
+                                    <td class="px-4 py-2 text-left">Appointment Confirmed</td>
+                                @elseif ($appointment->status == 'disapproved')
+                                    <td class="px-4 py-2 text-left">Appointment Disapproved</td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
