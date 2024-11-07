@@ -9,7 +9,7 @@ class Subscription extends Model
 {
     use HasFactory;
 
-    protected $table = 'subscriptions'; // Specify the table name if it doesn't follow Laravel's conventions
+    protected $table = 'subscriptions'; // Ensure the table name is correct
 
     protected $primaryKey = 'id';
 
@@ -25,6 +25,12 @@ class Subscription extends Model
         'start_date' => 'datetime',
         'end_date' => 'datetime',
     ];
+
+    // Ensure this method is defined correctly
+    public function payment()
+    {
+        return $this->hasOne(Payment::class, 'subscription_id');
+    }
 
     public function patient()
     {

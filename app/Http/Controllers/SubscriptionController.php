@@ -12,9 +12,17 @@ class SubscriptionController extends Controller
     // List all subscriptions
     public function index()
     {
-        $subscriptions = Subscription::all();
+        $subscriptions = Subscription::where('patient_id', auth()->id())->get(); // Assuming 'user_id' is the foreign key
         return view('subscriptions.index', compact('subscriptions'));
     }
+
+    public function pendingPayments()
+{
+    // Eager load the 'payment' relationship to reduce queries
+    $subscriptions = Subscription::with('payment')->where('status', 'pending')->get();
+    return view('admin.pending', compact('subscriptions'));
+}
+    
 
     // Show form to subscribe to a service
     public function create()
@@ -85,14 +93,40 @@ class SubscriptionController extends Controller
             'service_name' => 'required|string|max:255',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date',
+            'status' => 'required|string|in:pending,active,expired,canceled',
+            'payment_method' => 'required|string|in:gcash,maya,credit_card,paypal', 
         ]);
 
         $subscription = Subscription::findOrFail($id);
         $subscription->update($validated);
 
-        return redirect()->route('subscriptions.index')->with('success', 'Subscription updated successfully.');
+        return redirect('/patient/subscriptions')->with('success', 'Subscription updated successfully.');
     }
     
+    // Approve a pending subscription and payment
+public function approvePayment($subscriptionId)
+{
+    // Find the subscription by ID
+    $subscription = Subscription::findOrFail($subscriptionId);
+
+    if ($subscription->status === 'pending') {
+        // Update the subscription status to 'active'
+        $subscription->status = 'active';
+        $subscription->save();
+
+        // Also approve the payment if you have a Payment model related to the subscription
+        $payment = Payment::where('subscription_id', $subscriptionId)->first();
+        if ($payment && $payment->status === 'pending') {
+            $payment->status = 'approved';
+            $payment->save();
+        }
+
+        return redirect()->back()->with('success', 'Payment and subscription approved successfully.');
+    }
+
+    return redirect()->back()->with('error', 'Subscription not found or already processed.');
+}
+
     
 
     // Cancel/Delete a subscription
@@ -101,6 +135,6 @@ class SubscriptionController extends Controller
         $subscription = Subscription::findOrFail($id);
         $subscription->delete();
 
-        return redirect('/patient/my-subscriptions')->with('success', 'Subscription canceled successfully.');
+        return redirect('/subscriptions')->with('success', 'Subscription canceled successfully.');
     }
 }

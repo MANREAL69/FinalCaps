@@ -12,10 +12,13 @@ class PatientController extends Controller
 {
     //
     public function index()
-    {
-        $patients = User::where('role', 'therapist')->get();
-        return view('patients.dashboard', compact('patients'));
-    }
+{
+    // Retrieve the currently authenticated user (who is a patient)
+    $patient = User::where('role', 'patient')->where('id', auth()->id())->first();
+
+    // Check if the patient exists, then return the view with that patient
+    return view('patients.dashboard', compact('patient'));
+}
 
     public function viewApp()
     {

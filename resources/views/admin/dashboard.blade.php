@@ -19,6 +19,7 @@
                         <li><a href="#" class="text-blue-600 hover:underline">Manage Users</a></li>
                         <li><a href="#" class="text-blue-600 hover:underline">View Reports</a></li>
                         <li><a href="#" class="text-blue-600 hover:underline">System Settings</a></li>
+                        <li><a href="#" class="text-blue-600 hover:underline">Content Management</a></li>
                     </ul>
                 </div>
             </div>

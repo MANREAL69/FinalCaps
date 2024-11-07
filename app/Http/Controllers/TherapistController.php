@@ -11,10 +11,14 @@ use Illuminate\Support\Facades\Auth;
 class TherapistController extends Controller
 {
     public function index()
-    {
-        $therapists = User::where('role', 'therapist')->get();
-        return view('therapist.dashboard', compact('therapists'));
-    }
+{
+    // Retrieve the currently authenticated therapist
+    $therapist = User::where('role', 'therapist')->where('id', auth()->id())->first();
+
+    // Return the view with the therapist data
+    return view('therapist.dashboard', compact('therapist'));
+}
+
 
     public function appIndex()
     {

@@ -13,7 +13,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\PaymentController;
-
+use App\Http\Controllers\ArticleController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -46,6 +46,18 @@ Route::middleware(['auth', 'role:admin'])->get('/admin/users', [AdminController:
 Route::middleware(['auth', 'role:admin'])->get('/admin/reports', [AdminController::class, 'reports'])->name('admin.reports');
 Route::middleware(['auth', 'role:admin'])->get('/admin/therapists', [AdminController::class, 'therapists'])->name('admin.therapists');
 Route::middleware(['auth', 'role:admin'])->get('/admin/patients', [AdminController::class, 'patients'])->name('admin.patients');
+Route::middleware(['auth', 'role:admin'])->get('/admin/subscription', [SubscriptionController::class, 'pendingPayments'])->name('admin.pending');
+Route::middleware(['auth', 'role:admin'])->post('/admin/subscription/{subscriptionId}', [SubscriptionController::class, 'approvePayment'])->name('admin.subscriptions.approve');
+
+// Admin article management routes
+Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/articles', [ArticleController::class, 'index'])->name('articles.index');
+    Route::get('/admin/articles/create', [ArticleController::class, 'create'])->name('articles.create');
+    Route::post('/admin/articles', [ArticleController::class, 'store'])->name('articles.store');
+    Route::get('/admin/articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
+    Route::put('/admin/articles/{id}', [ArticleController::class, 'update'])->name('articles.update');
+    Route::delete('/admin/articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+});
 
 // Therapist dashboard route
 Route::middleware(['auth', 'role:therapist'])->get('/therapist/dashboard', [TherapistController::class, 'index'])->name('therapist.dashboard');
@@ -59,7 +71,6 @@ Route::post('/patient/subscriptions/{id}/update', [SubscriptionController::class
 Route::delete('/patient/subscriptions/{id}', [SubscriptionController::class, 'destroy']); // Cancel subscription
 Route::get('/patient/subscriptions/payment', [SubscriptionController::class, 'payment'])->name('subscriptions.payment');
 Route::post('/patient/subscriptions/payments/store', [PaymentController::class, 'store'])->name('payments.store');
-
 
 // Patient dashboard route
 Route::middleware(['auth', 'role:patient'])->get('/patient/dashboard', [PatientController::class, 'index'])->name('patients.dashboard');
@@ -93,7 +104,8 @@ Route::middleware(['auth', 'role:therapist'])->get('/therapist/appointment', [Th
 Route::middleware(['auth', 'role:therapist'])->post('/therapist/appointment/{appointmentID}/approve', [TherapistController::class, 'approveApp'])->name('therapist.approve');
 Route::middleware(['auth', 'role:therapist'])->post('/therapist/appointment/{appointmentID}/disapprove', [TherapistController::class, 'disapproveApp'])->name('therapist.disapprove');
 
-
+// Patient routes to view articles
+Route::get('/articles', [ArticleController::class, 'showForPatients'])->name('articles.showForPatients');
 
 // Authentication routes
 Route::post('/login', [LoginController::class, 'login'])->name('login');
@@ -106,7 +118,6 @@ Route::middleware(['auth', 'role:patient'])->group(function () {
     Route::get('/patient/chat/{query}', Chat::class)->name('chat.show.livewire'); // Renamed
     Route::get('/patient/users', Users::class)->name('chat.users');
 });
-
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
